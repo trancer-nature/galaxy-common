@@ -3,6 +3,7 @@ module github.com/trancer-nature/galaxy-common
 go 1.18
 
 require (
+	github.com/apolloconfig/agollo/v4 v4.2.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/olivere/elastic/v7 v7.0.20
 	go.mongodb.org/mongo-driver v1.11.2

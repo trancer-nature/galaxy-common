@@ -1,6 +1,11 @@
 package format
 
-import "encoding/json"
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"go.opentelemetry.io/otel/trace"
+)
 
 //common constant
 const (
@@ -37,4 +42,15 @@ func Unmarshal(data []byte, v interface{}) error {
 // 序列化，包装原生json
 func Marshal(v interface{}) ([]byte, error) {
 	return json.Marshal(v)
+}
+
+func GetTraceSpanID(ctx context.Context) string {
+	var traceID string
+	var spanID string
+	spanCtx := trace.SpanContextFromContext(ctx)
+	spanID = spanCtx.SpanID().String()
+	if spanCtx.HasTraceID() {
+		traceID = spanCtx.TraceID().String()
+	}
+	return fmt.Sprintf("%s-%s", traceID, spanID)
 }

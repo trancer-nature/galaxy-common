@@ -1,5 +1,11 @@
 package paganation
 
+var (
+	DefaultPage = 1
+	DefaultSize = 20
+	MaxSize     = 1000
+)
+
 // 临时分页结构体
 type pagination struct {
 	CurrentPage uint32
@@ -12,7 +18,7 @@ type pagination struct {
 	Last        bool
 }
 
-// 新增通用分布结构体
+// NewCommonPagination 新增通用分布结构体
 func NewCommonPagination(listLen, pageNo, pageSize, total uint32) *pagination {
 	var first, last, hasNext bool
 	var prePage, nextPage, totalCount, totalPage uint32
@@ -61,6 +67,7 @@ func NewCommonPagination(listLen, pageNo, pageSize, total uint32) *pagination {
 	}
 }
 
+// GetStartPage 获取起始查询位置
 func GetStartPage(page, size, total int) int {
 	if total == 0 {
 		return 0
@@ -87,4 +94,21 @@ func GetStartPage(page, size, total int) int {
 	}
 
 	return page
+}
+
+// VerifyPage 校验分页参数
+func VerifyPage(page, size int) (rtPage int, rtSize int) {
+	if page <= 0 {
+		rtPage = DefaultPage
+	} else {
+		rtPage = page
+	}
+	if size == 0 {
+		rtSize = DefaultSize
+	} else if size > MaxSize {
+		rtSize = MaxSize
+	} else {
+		rtSize = size
+	}
+	return
 }

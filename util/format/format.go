@@ -16,6 +16,8 @@ const (
 	MaxSize         = 2000
 	DefaultPageNo   = 1
 	DefaultPageSize = 20
+	DefaultRetCode  = 0
+	Success         = "success"
 )
 
 // ToJsonString

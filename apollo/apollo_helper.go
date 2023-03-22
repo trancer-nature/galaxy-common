@@ -8,6 +8,7 @@ import (
 	apolloConfig "github.com/apolloconfig/agollo/v4/env/config"
 	"github.com/apolloconfig/agollo/v4/extension"
 	"github.com/apolloconfig/agollo/v4/storage"
+	"os"
 	"sync/atomic"
 )
 
@@ -26,8 +27,24 @@ func (l *listener) OnChange(_ *storage.ChangeEvent) {
 
 func (l *listener) OnNewestChange(_ *storage.FullChangeEvent) {}
 
+func fromFile(path string) (context.Context, []byte, error) {
+	content, err := os.ReadFile(path)
+	if err != nil || len(content) == 0 {
+		return nil, nil, err
+	}
+	return context.Background(), content, nil
+}
+
 //GetConfig 获取配置
-func GetConfig(appID, ip, secret, cluster string, namespaceName []string) (context.Context, []byte, error) {
+func GetConfig(appID, ip, secret, cluster, path string, namespaceName []string) (context.Context, []byte, error) {
+	buff := bytes.Buffer{}
+	if path != "" {
+		ctx, bs, err := fromFile(path)
+		if err == nil && len(bs) > 0 {
+			return ctx, bs, nil
+		}
+	}
+
 	ctx, cancel := context.WithCancel(context.Background())
 
 	l := listener{
@@ -36,8 +53,6 @@ func GetConfig(appID, ip, secret, cluster string, namespaceName []string) (conte
 	}
 
 	extension.AddFormatParser(constant.YAML, &Parser{})
-
-	buff := bytes.Buffer{}
 
 	for _, name := range namespaceName {
 		apollo := &apolloConfig.AppConfig{

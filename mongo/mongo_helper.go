@@ -32,6 +32,7 @@ func NewMongoPool(config MongoClientConfig) (*MongoPool, error) {
 	pool := &MongoPool{
 		capacity:   config.MaxPoolSize,
 		host:       config.Url,
+		name:       config.Name,
 		pw:         config.PassWord,
 		pool:       make(chan *mongo.Client, config.MaxPoolSize),
 		replicaSet: config.ReplicaSet,

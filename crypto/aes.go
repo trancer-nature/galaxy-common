@@ -6,6 +6,7 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 	"errors"
+	"strings"
 )
 
 // PKCS7Padding fills plaintext as an integral multiple of the block length.
@@ -62,7 +63,9 @@ func Base64AESCBCEncrypt(p, key []byte) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return base64.StdEncoding.EncodeToString(c), nil
+
+	code := strings.Replace(base64.StdEncoding.EncodeToString(c), "\r\n", "", -1)
+	return code, nil
 }
 
 // Base64AESCBCDecrypt decrypts cipher text encoded by base64 with AES algorithm in CBC mode.

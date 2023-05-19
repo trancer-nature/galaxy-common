@@ -12,6 +12,60 @@ import (
 	"sync/atomic"
 )
 
+type OptionFunc func(*ap)
+
+type ap struct {
+	app           string
+	ip            string
+	secret        string
+	cluster       string
+	path          string
+	namespaceName []string
+}
+
+func WithApp(app string) OptionFunc {
+	return func(ap *ap) {
+		ap.app = app
+	}
+}
+
+func WithIp(ip string) OptionFunc {
+	return func(ap *ap) {
+		ap.ip = ip
+	}
+}
+
+func WithSecret(secret string) OptionFunc {
+	return func(ap *ap) {
+		ap.secret = secret
+	}
+}
+
+func WithCluster(cluster string) OptionFunc {
+	return func(ap *ap) {
+		ap.cluster = cluster
+	}
+}
+
+func WithPath(path string) OptionFunc {
+	return func(ap *ap) {
+		ap.path = path
+	}
+}
+
+func WithNamespaceName(namespaceName []string) OptionFunc {
+	return func(ap *ap) {
+		ap.namespaceName = namespaceName
+	}
+}
+
+func NewConfig(opts ...OptionFunc) {
+	var config ap
+	for _, opt := range opts {
+		opt(&config)
+	}
+}
+
 type listener struct {
 	lock   int64
 	cancel context.CancelFunc
@@ -35,11 +89,11 @@ func fromFile(path string) (context.Context, []byte, error) {
 	return context.Background(), content, nil
 }
 
-//GetConfig 获取配置
-func GetConfig(appID, ip, secret, cluster, path string, namespaceName []string) (context.Context, []byte, error) {
+//GetConfigBytes 获取配置
+func GetConfigBytes(config ap) (context.Context, []byte, error) {
 	buff := bytes.Buffer{}
-	if path != "" {
-		ctx, bs, err := fromFile(path)
+	if config.path != "" {
+		ctx, bs, err := fromFile(config.path)
 		if err == nil && len(bs) > 0 {
 			return ctx, bs, nil
 		}
@@ -54,13 +108,13 @@ func GetConfig(appID, ip, secret, cluster, path string, namespaceName []string) 
 
 	extension.AddFormatParser(constant.YAML, &Parser{})
 
-	for _, name := range namespaceName {
+	for _, name := range config.namespaceName {
 		apollo := &apolloConfig.AppConfig{
-			AppID:         appID,
-			Cluster:       cluster,
-			IP:            ip,
+			AppID:         config.app,
+			Cluster:       config.cluster,
+			IP:            config.ip,
 			NamespaceName: name,
-			Secret:        secret,
+			Secret:        config.secret,
 		}
 
 		client, err := agollo.StartWithConfig(func() (*apolloConfig.AppConfig, error) {

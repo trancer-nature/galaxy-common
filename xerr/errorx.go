@@ -1,10 +1,24 @@
 package xerr
 
-import "fmt"
+import (
+	"fmt"
+	"go.opentelemetry.io/otel/trace"
+)
 
 /**
 常用通用固定错误
 */
+const DefaultCode uint32 = 1
+
+var message map[uint32]string
+
+func MapErrMsg(errcode uint32) string {
+	if msg, ok := message[errcode]; ok {
+		return msg
+	} else {
+		return "服务器开小差啦,稍后再来试一试"
+	}
+}
 
 type CodeError struct {
 	errCode uint32
@@ -34,4 +48,28 @@ func NewErrCode(errCode uint32) *CodeError {
 
 func NewErrMsg(errMsg string) *CodeError {
 	return &CodeError{errCode: SERVER_COMMON_ERROR, errMsg: errMsg}
+}
+
+func GetSpanID(span trace.SpanContext) string {
+	if !span.IsValid() {
+		return ""
+	}
+
+	if !span.HasSpanID() {
+		return ""
+	}
+
+	return span.SpanID().String()
+}
+
+func GetTraceID(span trace.SpanContext) string {
+	if !span.IsValid() {
+		return ""
+	}
+
+	if !span.HasTraceID() {
+		return ""
+	}
+
+	return span.TraceID().String()
 }

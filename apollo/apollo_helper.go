@@ -59,13 +59,6 @@ func WithNamespaceName(namespaceName []string) OptionFunc {
 	}
 }
 
-func NewConfig(opts ...OptionFunc) {
-	var config ap
-	for _, opt := range opts {
-		opt(&config)
-	}
-}
-
 type listener struct {
 	lock   int64
 	cancel context.CancelFunc
@@ -89,8 +82,13 @@ func fromFile(path string) (context.Context, []byte, error) {
 	return context.Background(), content, nil
 }
 
-//GetConfigBytes 获取配置
-func GetConfigBytes(config ap) (context.Context, []byte, error) {
+//NewConfigBytes 获取配置
+func NewConfigBytes(opts ...OptionFunc) (context.Context, []byte, error) {
+	var config ap
+	for _, opt := range opts {
+		opt(&config)
+	}
+
 	buff := bytes.Buffer{}
 	if config.path != "" {
 		ctx, bs, err := fromFile(config.path)

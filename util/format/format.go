@@ -56,3 +56,8 @@ func GetTraceSpanID(ctx context.Context) string {
 	}
 	return fmt.Sprintf("%s-%s", traceID, spanID)
 }
+
+// Ptr returns a pointer to the provided value.
+func Ptr[T any](v T) *T {
+	return &v
+}

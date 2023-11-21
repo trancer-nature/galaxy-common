@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go.opentelemetry.io/otel/trace"
+	"reflect"
 )
 
 //common constant
@@ -60,4 +61,69 @@ func GetTraceSpanID(ctx context.Context) string {
 // Ptr returns a pointer to the provided value.
 func Ptr[T any](v T) *T {
 	return &v
+}
+
+func ToMap(tag string, in interface{}) map[string]interface{} {
+	out := make(map[string]interface{})
+	v := reflect.ValueOf(in)
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+	// we only accept structs
+	if v.Kind() != reflect.Struct {
+		panic(fmt.Errorf("ToMap only accepts structs; got %T", v))
+	}
+	typ := v.Type()
+	for i := 0; i < v.NumField(); i++ {
+		// gets us a StructField
+		fi := typ.Field(i)
+		if tagv := fi.Tag.Get(tag); tagv != "" {
+			// set key of map to value in struct field
+			val := v.Field(i)
+			zero := reflect.Zero(val.Type()).Interface()
+			current := val.Interface()
+			if reflect.DeepEqual(current, zero) {
+				continue
+			}
+			out[tagv] = current
+		}
+	}
+	return out
+}
+
+func ToList(tag string, in interface{}) [2]string {
+	var out [2]string
+	v := reflect.ValueOf(in)
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+
+	// we only accept structs
+	if v.Kind() != reflect.Struct {
+		panic(fmt.Errorf("ToMap only accepts structs; got %T", v))
+	}
+
+	typ := v.Type()
+	for i := 0; i < v.NumField(); i++ {
+		// gets us a StructField
+		fi := typ.Field(i)
+		if tagv := fi.Tag.Get(tag); tagv != "" {
+			// set key of map to value in struct field
+			val := v.Field(i)
+			zero := reflect.Zero(val.Type()).Interface()
+			current := val.Interface()
+
+			if reflect.DeepEqual(current, zero) {
+				continue
+			}
+
+			if cur, ok := current.(string); ok {
+				return [2]string{tagv, cur}
+			}
+
+			return out
+		}
+	}
+
+	return out
 }

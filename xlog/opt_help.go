@@ -133,3 +133,11 @@ func (rw *xLogResponseWriter) Write(b []byte) (int, error) {
 	rw.body.Write(b)
 	return rw.ResponseWriter.Write(b)
 }
+
+func (rw *xLogResponseWriter) getCode() int {
+	return rw.statusCode
+}
+
+func (rw *xLogResponseWriter) getBody() *bytes.Buffer {
+	return rw.body
+}

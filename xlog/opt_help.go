@@ -38,11 +38,9 @@ type Result struct {
 // NewOptLog 创建一个新的 OptLog 实例，并应用默认值
 func NewOptLog(module, trace string) *OptLog {
 	return &OptLog{
-		Module:    module,
-		Trace:     trace,
-		OpTime:    time.Now().Format(format.CommonLayout),
-		CreatedAt: time.Now().Format(format.CommonLayout),
-		// 设置其他需要的默认值
+		Module: module,
+		Trace:  trace,
+		OpTime: time.Now().Format(format.CommonLayout),
 	}
 }
 

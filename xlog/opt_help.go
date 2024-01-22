@@ -113,3 +113,23 @@ func ExtractParam(r *http.Request) string {
 	}
 	return ""
 }
+
+type xLogResponseWriter struct {
+	http.ResponseWriter
+	statusCode int
+	body       *bytes.Buffer
+}
+
+func NewLoggingResponseWriter(w http.ResponseWriter) *xLogResponseWriter {
+	return &xLogResponseWriter{ResponseWriter: w, statusCode: http.StatusOK, body: &bytes.Buffer{}}
+}
+
+func (rw *xLogResponseWriter) WriteHeader(code int) {
+	rw.statusCode = code
+	rw.ResponseWriter.WriteHeader(code)
+}
+
+func (rw *xLogResponseWriter) Write(b []byte) (int, error) {
+	rw.body.Write(b)
+	return rw.ResponseWriter.Write(b)
+}

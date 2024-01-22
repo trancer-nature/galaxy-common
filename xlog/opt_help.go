@@ -3,6 +3,7 @@ package xlog
 import (
 	"bytes"
 	"github.com/trancer-nature/galaxy-common/util/format"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -95,4 +96,20 @@ func (opt *OptLog) WithCompany(company string) *OptLog {
 func (opt *OptLog) WithPermission(permission string) *OptLog {
 	opt.Permission = permission
 	return opt
+}
+
+// ExtractParam 从 http.Request 中提取参数
+func ExtractParam(r *http.Request) string {
+	if r.Method == http.MethodPost || r.Method == http.MethodPut || r.Method == http.MethodDelete {
+		if r.Body != nil {
+			buf := new(bytes.Buffer)
+			_, _ = buf.ReadFrom(r.Body)
+			r.Body = ioutil.NopCloser(bytes.NewBuffer(buf.Bytes()))
+			return buf.String()
+		}
+	}
+	if r.Method == http.MethodGet {
+		return r.URL.Query().Encode()
+	}
+	return ""
 }

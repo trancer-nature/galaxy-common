@@ -27,13 +27,9 @@ type OptLog struct {
 	Param      string `json:"param,omitempty"`
 	Trace      string `json:"trace,omitempty"`
 	CreatedAt  string `json:"created_at,omitempty"`
-	Result     Result `json:"result,omitempty"`
-}
-
-type Result struct {
-	Code int32       `json:"code,omitempty"`
-	Data interface{} `json:"data,omitempty"`
-	Msg  string      `json:"msg,omitempty"`
+	Code       int32  `json:"code,omitempty"`
+	Data       string `json:"data,omitempty"`
+	Msg        string `json:"msg,omitempty"`
 }
 
 // NewOptLog 创建一个新的 OptLog 实例，并应用默认值
@@ -74,11 +70,6 @@ func (opt *OptLog) WithUrl(url string) *OptLog {
 
 func (opt *OptLog) WithParam(param string) *OptLog {
 	opt.Param = param
-	return opt
-}
-
-func (opt *OptLog) WithRsp(ret Result) *OptLog {
-	opt.Result = ret
 	return opt
 }
 

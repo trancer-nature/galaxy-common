@@ -26,7 +26,6 @@ type OptLog struct {
 	Module     string `json:"module,omitempty"`
 	Param      string `json:"param,omitempty"`
 	Trace      string `json:"trace,omitempty"`
-	CreatedAt  string `json:"created_at,omitempty"`
 	HttpCode   int32  `json:"http_code,omitempty"`
 	Data       string `json:"data,omitempty"`
 	Msg        string `json:"msg,omitempty"`

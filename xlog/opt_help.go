@@ -15,20 +15,20 @@ type LogWriter struct {
 
 // OptLog 定义了操作日志的结构
 type OptLog struct {
-	User       string `json:"user,omitempty"`
-	OpTime     string `json:"op_time,omitempty"`
-	OpType     string `json:"op_type,omitempty"`
-	IP         string `json:"ip,omitempty"`
-	Company    string `json:"company,omitempty"`
-	Permission string `json:"permission,omitempty"`
-	Method     string `json:"method,omitempty"`
-	URL        string `json:"url,omitempty"`
-	Module     string `json:"module,omitempty"`
-	Param      string `json:"param,omitempty"`
-	Trace      string `json:"trace,omitempty"`
-	HttpCode   int32  `json:"http_code,omitempty"`
-	Data       string `json:"data,omitempty"`
-	Msg        string `json:"msg,omitempty"`
+	User         string `json:"user,omitempty"`
+	OpTime       string `json:"op_time,omitempty"`
+	OpType       string `json:"op_type,omitempty"`
+	IP           string `json:"ip,omitempty"`
+	Company      string `json:"company,omitempty"`
+	Permission   string `json:"permission,omitempty"`
+	Method       string `json:"method,omitempty"`
+	URL          string `json:"url,omitempty"`
+	Module       string `json:"module,omitempty"`
+	Param        string `json:"param,omitempty"`
+	Trace        string `json:"trace,omitempty"`
+	HttpCode     int32  `json:"http_code,omitempty"`
+	ResponseData string `json:"response_data,omitempty"`
+	Msg          string `json:"msg,omitempty"`
 }
 
 // NewOptLog 创建一个新的 OptLog 实例，并应用默认值

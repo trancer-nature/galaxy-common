@@ -8,7 +8,7 @@ import (
 /**
 常用通用固定错误
 */
-const DefaultCode uint32 = 1
+const DefaultCode uint32 = 200
 
 var message map[uint32]string
 

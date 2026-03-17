@@ -82,6 +82,11 @@ func ToMap(tag string, in interface{}) map[string]interface{} {
 			val := v.Field(i)
 			zero := reflect.Zero(val.Type()).Interface()
 			current := val.Interface()
+			if val.Kind() == reflect.Slice || val.Kind() == reflect.Array {
+				if val.Len() == 0 {
+					continue
+				}
+			}
 			if reflect.DeepEqual(current, zero) {
 				continue
 			}

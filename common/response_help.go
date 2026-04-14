@@ -11,6 +11,7 @@ import (
 
 type Response struct {
 	Status    uint32
+	Code      int64
 	Data      interface{}
 	Message   string
 	RequestID string
@@ -39,6 +40,7 @@ func NewResponse(ctx context.Context, resp interface{}) {
 		Status:    xerr.DefaultCode,
 		Message:   format.EmptyString,
 		RequestID: requestID,
+		Code:      200,
 	}
 	_ = copier.Copy(resp, response)
 }
